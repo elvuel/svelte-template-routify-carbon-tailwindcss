@@ -4,13 +4,22 @@
   import TextInput from "carbon-components-svelte/src/TextInput/TextInput.svelte";
   import Button from "carbon-components-svelte/src/Button/Button.svelte";
   import { metatags } from "@roxi/routify";
+  import Theme from "carbon-components-svelte/src/Theme/Theme.svelte";
   metatags.title = "Login";
   metatags.description = "Login from";
 </script>
 
-<div
-  class="w-screen h-screen overflow-hidden flex justify-center items-center bg-white"
->
+<Theme
+  render="toggle"
+  toggle={{
+    themes: ["g10", "g80"],
+    labelA: "Enable dark mode",
+    labelB: "Enable dark mode",
+    hideLabel: true,
+    size: "sm",
+  }}
+/>
+<div class="w-screen h-screen overflow-hidden flex justify-center items-center">
   <div class="w-full my-2 md:w-3/5 lg:w-2/5">
     <div class="flex justify-center items-center mt-10 mb-20">
       <svg
@@ -79,7 +88,7 @@
     <div
       class="flex my-8 mx-4 md:mx-2 justify-end border-b-2 border-gray-700 hover:border-green-800"
     >
-      <Button kind="tertiary">Tertiary button</Button>
+      <Button kind="primary">Login</Button>
     </div>
   </div>
 </div>
