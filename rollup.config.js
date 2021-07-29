@@ -15,7 +15,11 @@ import {
 } from 'spassr'
 import getConfig from '@roxi/routify/lib/utils/config'
 import autoPreprocess from 'svelte-preprocess'
-import postcssImport from 'postcss-import'
+// import postcssImport from 'postcss-import'
+import {
+    optimizeCarbonImports
+} from "carbon-components-svelte/preprocess";
+
 import {
     injectManifest
 } from 'rollup-plugin-workbox'
@@ -79,6 +83,7 @@ export default {
             emitCss: false,
             hot: isNollup,
             preprocess: [
+                optimizeCarbonImports(),
                 autoPreprocess({
                     postcss: require('./postcss.config.js'),
                     defaults: {
