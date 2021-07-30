@@ -48,6 +48,7 @@
     "spassr": "^2.6.0",
     "stylelint-config-recommended": "^5.0.0",
     "svelte": "^3.38.2",
+    "svelte-i18n": "^3.3.9",
     "svelte-preprocess": "^4.7.4",
     "tailwindcss": "^2.2.7",
     "tossr": "^1.4.2"
