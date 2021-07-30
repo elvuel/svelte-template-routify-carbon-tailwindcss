@@ -36,6 +36,7 @@
       },
       onSuccess: (data, variables, context) => {
         // I will fire second!
+        resetUiControls();
       },
       onError: (error, variables, context) => {
         // I will fire second!
@@ -62,6 +63,16 @@
       invalidText: "",
     },
   };
+
+  function resetUiControls() {
+    uiCtrl.username.invalid = false;
+    uiCtrl.username.invalidText = "";
+    uiCtrl.username.value = "";
+
+    uiCtrl.password.invalid = false;
+    uiCtrl.password.invalidText = "";
+    uiCtrl.password.value = "";
+  }
 </script>
 
 <Theme
@@ -175,10 +186,6 @@
           validator
             .validate(payload)
             .then(() => {
-              uiCtrl.username.invalid = false;
-              uiCtrl.password.invalid = false;
-              uiCtrl.username.invalidText = "";
-              uiCtrl.password.invalidText = "";
               signIn(payload);
             })
             .catch(({ errors, fields }) => {
