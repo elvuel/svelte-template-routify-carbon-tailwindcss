@@ -1,6 +1,8 @@
 <script>
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
+  import { QueryClient, QueryClientProvider } from "@sveltestack/svelte-query";
+  const queryClient = new QueryClient();
 </script>
 
 <!-- <svelte:head>
@@ -13,7 +15,9 @@
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
   />
 </svelte:head> -->
-<Router {routes} />
+<QueryClientProvider client={queryClient}>
+  <Router {routes} />
+</QueryClientProvider>
 
 <style global>
   @import "carbon-components-svelte/css/all.css";

@@ -1,12 +1,62 @@
 <script>
-  // import RoutifyIntro from './example/_components/RoutifyIntro.svelte'
+  import { useMutation } from "@sveltestack/svelte-query";
+  import { auth } from "../../api/index";
+
   import PasswordInput from "carbon-components-svelte/src/TextInput/PasswordInput.svelte";
   import TextInput from "carbon-components-svelte/src/TextInput/TextInput.svelte";
   import Button from "carbon-components-svelte/src/Button/Button.svelte";
   import { metatags } from "@roxi/routify";
   import Theme from "carbon-components-svelte/src/Theme/Theme.svelte";
+
   metatags.title = "Login";
   metatags.description = "Login from";
+
+  const login = useMutation((creds) => auth(creds), {
+    // onMutate: async (variables) => {
+    //   // A mutation is about to happen!
+    // },
+    // onSuccess: (data, variables, context) => {
+    //   // I will fire first
+    // },
+    // onError: (error, variables, context) => {
+    //   // I will fire first
+    // },
+    // onSettled: (data, error, variables, context) => {
+    //   // I will fire first
+    // },
+  });
+
+  function signIn(creds) {
+    $login.mutate(creds, {
+      onMutate: async (variables) => {
+        // A mutation is about to happen!
+      },
+      onSuccess: (data, variables, context) => {
+        // I will fire second!
+      },
+      onError: (error, variables, context) => {
+        // I will fire second!
+        setTimeout(() => {
+          $login.reset();
+        }, 5000);
+      },
+      onSettled: (data, error, variables, context) => {
+        // I will fire second!
+      },
+    });
+  }
+
+  // let user, password;
+  let userCtl = {
+      value: "",
+      invalid: false,
+      invalidText: "",
+    },
+    passwordCtl = {
+      value: "",
+      invalid: false,
+      invalidText: "",
+    };
 </script>
 
 <Theme
@@ -78,17 +128,46 @@
     <div
       class="flex my-8 mx-4 md:mx-2 border-b-2 border-gray-700 hover:border-green-800"
     >
-      <TextInput labelText="User name" placeholder="Enter user name..." />
+      <TextInput
+        labelText="User name"
+        placeholder="Enter user name..."
+        bind:value={userCtl.value}
+        invalid={userCtl.invalid}
+        invalidText={userCtl.invalidText}
+      />
     </div>
     <div
       class="flex my-8 mx-4 md:mx-2 border-b-2 border-gray-700 hover:border-green-800"
     >
-      <PasswordInput labelText="Password" placeholder="Enter password..." />
+      <PasswordInput
+        labelText="Password"
+        placeholder="Enter password..."
+        bind:value={passwordCtl}
+        invalid={passwordCtl.invalid}
+        invalidText={passwordCtl.invalidText}
+      />
     </div>
     <div
       class="flex my-8 mx-4 md:mx-2 justify-end border-b-2 border-gray-700 hover:border-green-800"
     >
-      <Button kind="primary">Login</Button>
+      {#if $login.isLoading}
+        <p>Adding todo...</p>
+      {:else if $login.isError}
+        <div>An error occurred: {JSON.stringify($login.error)}</div>
+      {:else if $login.isSuccess}
+        {$login.data}
+      {/if}
+      <Button
+        kind="primary"
+        on:click={(e) => {
+          // $login.mutate({ user: user, password: password });
+          e.preventDefault();
+          signIn({
+            user: userCtl.value,
+            password: passwordCtl.value,
+          });
+        }}>Login</Button
+      >
     </div>
   </div>
 </div>
