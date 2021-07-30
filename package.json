@@ -62,6 +62,7 @@
     ]
   },
   "dependencies": {
+    "async-validator": "^3.5.2",
     "axios": "^0.21.1",
     "sveltestrap": "^5.4.0"
   }

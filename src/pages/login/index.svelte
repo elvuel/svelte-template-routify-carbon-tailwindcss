@@ -1,12 +1,15 @@
 <script>
   import { useMutation } from "@sveltestack/svelte-query";
   import { auth } from "../../api/index";
+  import Schema from "async-validator";
+  import { constraints } from "../../validation/constraints";
 
   import PasswordInput from "carbon-components-svelte/src/TextInput/PasswordInput.svelte";
   import TextInput from "carbon-components-svelte/src/TextInput/TextInput.svelte";
   import Button from "carbon-components-svelte/src/Button/Button.svelte";
   import { metatags } from "@roxi/routify";
   import Theme from "carbon-components-svelte/src/Theme/Theme.svelte";
+  import { validate_component } from "svelte/internal";
 
   metatags.title = "Login";
   metatags.description = "Login from";
@@ -47,16 +50,18 @@
   }
 
   // let user, password;
-  let userCtl = {
+  let uiCtrl = {
+    username: {
       value: "",
       invalid: false,
       invalidText: "",
     },
-    passwordCtl = {
+    password: {
       value: "",
       invalid: false,
       invalidText: "",
-    };
+    },
+  };
 </script>
 
 <Theme
@@ -131,9 +136,9 @@
       <TextInput
         labelText="User name"
         placeholder="Enter user name..."
-        bind:value={userCtl.value}
-        invalid={userCtl.invalid}
-        invalidText={userCtl.invalidText}
+        bind:value={uiCtrl.username.value}
+        invalid={uiCtrl.username.invalid}
+        invalidText={uiCtrl.username.invalidText}
       />
     </div>
     <div
@@ -142,9 +147,9 @@
       <PasswordInput
         labelText="Password"
         placeholder="Enter password..."
-        bind:value={passwordCtl}
-        invalid={passwordCtl.invalid}
-        invalidText={passwordCtl.invalidText}
+        bind:value={uiCtrl.password.value}
+        invalid={uiCtrl.username.invalid}
+        invalidText={uiCtrl.password.invalidText}
       />
     </div>
     <div
@@ -162,10 +167,26 @@
         on:click={(e) => {
           // $login.mutate({ user: user, password: password });
           e.preventDefault();
-          signIn({
-            user: userCtl.value,
-            password: passwordCtl.value,
-          });
+          const payload = {
+            username: uiCtrl.username.value,
+            password: uiCtrl.password.value,
+          };
+          const validator = new Schema(constraints);
+          validator
+            .validate(payload)
+            .then(() => {
+              uiCtrl.username.invalid = false;
+              uiCtrl.password.invalid = false;
+              uiCtrl.username.invalidText = "";
+              uiCtrl.password.invalidText = "";
+              signIn(payload);
+            })
+            .catch(({ errors, fields }) => {
+              errors.forEach((element) => {
+                uiCtrl[element.field].invalid = true;
+                uiCtrl[element.field].invalidText = element.message;
+              });
+            });
         }}>Login</Button
       >
     </div>

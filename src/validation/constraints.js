@@ -1,15 +1,15 @@
-export const defaults = {
-    username: {
-        presence: true,
-        type: string,
+export const constraints = {
+    username: [{
+        required: true,
+        type: 'string',
         message: "must be present"
-    },
+    }, {
+        min: 3,
+        message: "must be at least 3 characters"
+    }],
     password: {
-        presence: true,
-        length: {
-            minimum: 4,
-            message: "must be at least 4 characters"
-        },
+        required: true,
+        type: 'string',
         message: "must be present"
     }
 }
