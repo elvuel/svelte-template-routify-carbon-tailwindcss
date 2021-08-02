@@ -5,8 +5,8 @@
 
   init({
     fallbackLocale: "zh-CN",
-    // initialLocale: getLocaleFromNavigator(),
-    initialLocale: "zh-CN",
+    initialLocale: getLocaleFromNavigator(),
+    // initialLocale: "zh-CN",
   });
 
   export async function preload() {
