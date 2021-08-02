@@ -1,7 +1,6 @@
 <script>
   import { useMutation } from "@sveltestack/svelte-query";
   import { auth } from "../../api/index";
-  import { constraints } from "../../validation/constraints";
   import { t } from "svelte-i18n";
 
   import PasswordInput from "carbon-components-svelte/src/TextInput/PasswordInput.svelte";
@@ -9,7 +8,7 @@
   import Button from "carbon-components-svelte/src/Button/Button.svelte";
   import { metatags } from "@roxi/routify";
   import Theme from "carbon-components-svelte/src/Theme/Theme.svelte";
-  import { newValidator } from "../../validation";
+  import { newValidator, getValidation } from "../../validation/index";
 
   metatags.title = "Login";
   metatags.description = "Login from";
@@ -182,7 +181,7 @@
             username: uiCtrl.username.value,
             password: uiCtrl.password.value,
           };
-          const validator = newValidator(constraints($t), $t);
+          const validator = newValidator(getValidation().constraints.login, $t);
           validator
             .validate(payload)
             .then(() => {

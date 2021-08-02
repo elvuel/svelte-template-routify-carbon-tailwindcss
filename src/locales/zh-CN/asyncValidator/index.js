@@ -44,9 +44,9 @@ export const asyncValidator = {
     pattern: {
         mismatch: '%s 值 %s 与模式 %s 不匹配'
     },
-    clone: function clone() {
-        var cloned = JSON.parse(JSON.stringify(this));
-        cloned.clone = this.clone;
-        return cloned;
-    }
+    // clone: function clone() {
+    //     var cloned = JSON.parse(JSON.stringify(this));
+    //     cloned.clone = this.clone;
+    //     return cloned;
+    // }
 }

@@ -1,12 +1,15 @@
 import {
-    constraints
-} from './constraints/index'
-
-import {
     asyncValidator
 } from './asyncValidator/index'
+import {
+    validation
+} from './validation'
+import {
+    model
+} from './model'
 
 export default {
-    constraints,
-    asyncValidator
+    asyncValidator,
+    model,
+    validation
 }

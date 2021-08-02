@@ -1,4 +1,5 @@
 import {
+    waitLocale,
     addMessages,
     register
 } from 'svelte-i18n'
@@ -20,4 +21,8 @@ export function SyncLoadLocale(name = 'zh-CN', locale = {}) {
 export function AsyncLoadLocale(name = 'zh-CN', locale = () => {}) {
     // register('en-US', () => import('./en-US.json'));
     register(name, locale)
+}
+export async function preload() {
+    // awaits for the loading of the 'en-US' and 'en' dictionaries
+    return waitLocale();
 }

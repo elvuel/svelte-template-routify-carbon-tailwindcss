@@ -1,11 +1,20 @@
-<script context="module">
-  import "./locales/Locale.svelte";
-</script>
-
 <script>
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
   import { QueryClient, QueryClientProvider } from "@sveltestack/svelte-query";
+  import { t, init, getLocaleFromNavigator } from "svelte-i18n";
+  import { loadValidation } from "./validation/index";
+  import { initLoad } from "./locales";
+
+  initLoad();
+
+  init({
+    fallbackLocale: "zh-CN",
+    initialLocale: getLocaleFromNavigator(),
+  });
+
+  loadValidation($t);
+
   const queryClient = new QueryClient();
 </script>
 

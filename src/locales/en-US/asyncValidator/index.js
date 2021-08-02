@@ -44,9 +44,9 @@ export const asyncValidator = {
     pattern: {
         mismatch: '%s value %s does not match pattern %s'
     },
-    clone: function clone() {
-        var cloned = JSON.parse(JSON.stringify(this));
-        cloned.clone = this.clone;
-        return cloned;
-    }
+    // clone: function clone() {
+    //     var cloned = JSON.parse(JSON.stringify(this));
+    //     cloned.clone = this.clone;
+    //     return cloned;
+    // }
 }
