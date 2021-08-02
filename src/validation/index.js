@@ -13,7 +13,6 @@
 
   // load all constraints with translate
   export function loadValidation(translate) {
-    console.log(login(translate))
     allValidation = {
       constraints: {
         login: login(translate),
