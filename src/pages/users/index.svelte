@@ -20,11 +20,13 @@
 
   import { useQuery } from "@sveltestack/svelte-query"
   import { users as fetchUsers } from "../../api/index"
+  import { url } from "@roxi/routify"
   import { t } from "svelte-i18n"
 
   const headers = [
     { key: "id", value: "ID" },
     { key: "name", value: "Name" },
+    { key: "intro", value: "Intro" },
     { key: "_action", value: "Action" },
   ]
 
@@ -48,7 +50,6 @@
   let rows = []
 
   function queryStatus() {
-    console.log($queryResult.status)
     switch ($queryResult.status) {
       case "loading":
         message.type = "active"
@@ -109,7 +110,7 @@
               </ToolbarMenuItem>
               <ToolbarMenuItem danger>Stop all</ToolbarMenuItem>
             </ToolbarMenu>
-            <Button>Create balancer</Button>
+            <Button href={$url("./new")}>New</Button>
           </ToolbarContent>
         </Toolbar>
         {#if message.message !== ""}

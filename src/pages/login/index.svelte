@@ -1,17 +1,17 @@
 <script>
-  import { useMutation } from "@sveltestack/svelte-query";
-  import { auth } from "../../api/index";
-  import { t } from "svelte-i18n";
+  import { useMutation } from "@sveltestack/svelte-query"
+  import { auth } from "../../api/index"
+  import { t } from "svelte-i18n"
 
-  import PasswordInput from "carbon-components-svelte/src/TextInput/PasswordInput.svelte";
-  import TextInput from "carbon-components-svelte/src/TextInput/TextInput.svelte";
-  import Button from "carbon-components-svelte/src/Button/Button.svelte";
-  import { metatags } from "@roxi/routify";
-  import Theme from "carbon-components-svelte/src/Theme/Theme.svelte";
-  import { newValidator, getValidation } from "../../validation/index";
+  import PasswordInput from "carbon-components-svelte/src/TextInput/PasswordInput.svelte"
+  import TextInput from "carbon-components-svelte/src/TextInput/TextInput.svelte"
+  import Button from "carbon-components-svelte/src/Button/Button.svelte"
+  import { metatags } from "@roxi/routify"
+  import Theme from "carbon-components-svelte/src/Theme/Theme.svelte"
+  import { newValidator, getValidation } from "../../validation/index"
 
-  metatags.title = "Login";
-  metatags.description = "Login from";
+  metatags.title = "Login"
+  metatags.description = "Login from"
 
   const login = useMutation((creds) => auth(creds), {
     // onMutate: async (variables) => {
@@ -26,7 +26,7 @@
     // onSettled: (data, error, variables, context) => {
     //   // I will fire first
     // },
-  });
+  })
 
   function signIn(creds) {
     $login.mutate(creds, {
@@ -35,18 +35,18 @@
       },
       onSuccess: (data, variables, context) => {
         // I will fire second!
-        resetUiControls();
+        resetUiControls()
       },
       onError: (error, variables, context) => {
         // I will fire second!
         setTimeout(() => {
-          $login.reset();
-        }, 5000);
+          $login.reset()
+        }, 5000)
       },
       onSettled: (data, error, variables, context) => {
         // I will fire second!
       },
-    });
+    })
   }
 
   // let user, password;
@@ -61,16 +61,16 @@
       invalid: false,
       invalidText: "",
     },
-  };
+  }
 
   function resetUiControls() {
-    uiCtrl.username.invalid = false;
-    uiCtrl.username.invalidText = "";
-    uiCtrl.username.value = "";
+    uiCtrl.username.invalid = false
+    uiCtrl.username.invalidText = ""
+    uiCtrl.username.value = ""
 
-    uiCtrl.password.invalid = false;
-    uiCtrl.password.invalidText = "";
-    uiCtrl.password.value = "";
+    uiCtrl.password.invalid = false
+    uiCtrl.password.invalidText = ""
+    uiCtrl.password.value = ""
   }
 </script>
 
@@ -158,7 +158,7 @@
         labelText="Password"
         placeholder="Enter password..."
         bind:value={uiCtrl.password.value}
-        invalid={uiCtrl.username.invalid}
+        invalid={uiCtrl.password.invalid}
         invalidText={uiCtrl.password.invalidText}
       />
     </div>
@@ -176,23 +176,23 @@
         kind="primary"
         on:click={(e) => {
           // $login.mutate({ user: user, password: password });
-          e.preventDefault();
+          e.preventDefault()
           const payload = {
             username: uiCtrl.username.value,
             password: uiCtrl.password.value,
-          };
-          const validator = newValidator(getValidation().constraints.login, $t);
+          }
+          const validator = newValidator(getValidation().constraints.login, $t)
           validator
             .validate(payload)
             .then(() => {
-              signIn(payload);
+              signIn(payload)
             })
             .catch(({ errors, fields }) => {
               errors.forEach((element) => {
-                uiCtrl[element.field].invalid = true;
-                uiCtrl[element.field].invalidText = element.message;
-              });
-            });
+                uiCtrl[element.field].invalid = true
+                uiCtrl[element.field].invalidText = element.message
+              })
+            })
         }}>Login</Button
       >
     </div>

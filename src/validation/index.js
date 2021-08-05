@@ -1,5 +1,6 @@
   import Schema from "async-validator";
   import login from './constraint/login/index.js';
+  import user from './constraint/user/index.js'
 
   let allValidation = {};
 
@@ -16,6 +17,7 @@
     allValidation = {
       constraints: {
         login: login(translate),
+        user: user(translate),
       }
     }
   }
