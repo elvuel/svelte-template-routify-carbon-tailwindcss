@@ -1,14 +1,12 @@
 <script>
-  import { userQuery } from "@sveltestack/svelte-query";
-  import { users as fetchUsers } from "../../api/index";
-  import { t } from "svelte-i18n";
-
   import {
     Grid,
     Row,
     Column,
     DataTable,
+    InlineLoading,
     Toolbar,
+    ToolbarBatchActions,
     ToolbarContent,
     ToolbarSearch,
     ToolbarMenu,
@@ -17,87 +15,89 @@
     OverflowMenu,
     OverflowMenuItem,
     Button,
-  } from "carbon-components-svelte";
+  } from "carbon-components-svelte"
+  import Delete16 from "carbon-icons-svelte/lib/Delete16"
+
+  import { useQuery } from "@sveltestack/svelte-query"
+  import { users as fetchUsers } from "../../api/index"
+  import { t } from "svelte-i18n"
+
+  const headers = [
+    { key: "id", value: "ID" },
+    { key: "name", value: "Name" },
+    { key: "_action", value: "Action" },
+  ]
+
+  let queryResult = useQuery("users", fetchUsers, {
+    retry: (faileCount, error) => {
+      if (faileCount > 3) {
+        console.log(error)
+      }
+    },
+    retryDelay: (faileCount) => {
+      return Math.min(1000 * 2 ** faileCount, 30000)
+    },
+  })
+
+  let message = {
+    type: "active",
+    message: "",
+  }
+
+  let selectedRowIds = []
+  let rows = []
+
+  function queryStatus() {
+    console.log($queryResult.status)
+    switch ($queryResult.status) {
+      case "loading":
+        message.type = "active"
+        message.message = "Loading..."
+        break
+      case "idle":
+        message.type = "active"
+        message.message = "idle"
+      case "error":
+        message.type = "error"
+        message.message = $queryResult.error.message
+        break
+      case "success":
+        message.type = "success"
+        message.message = ""
+        rows = $queryResult.data
+        break
+    }
+  }
+
+  $: $queryResult.status, queryStatus()
 </script>
 
 <Grid>
   <Row>
     <Column>
       <DataTable
-        on:click:header={(e) => {
-          e.preventDefault();
-          console.log(e);
-        }}
-        sortable
+        batchSelection
         zebra
         title="Load balancers"
         description="Your organization's active load balancers."
-        headers={[
-          { key: "name", value: "Name" },
-          { key: "protocol", value: "Protocol" },
-          { key: "port", value: "Port" },
-          { key: "rule", value: "Rule" },
-          { key: "_action", value: "Action" },
-        ]}
-        rows={[
-          {
-            id: "a",
-            name: "Load Balancer 3",
-            protocol: "HTTP",
-            port: 3000,
-            rule: "Round robin",
-          },
-          {
-            id: "b",
-            name: "Load Balancer 1",
-            protocol: "HTTP",
-            port: 443,
-            rule: "Round robin",
-          },
-          {
-            id: "c",
-            name: "Load Balancer 2",
-            protocol: "HTTP",
-            port: 80,
-            rule: "DNS delegation",
-          },
-          {
-            id: "d",
-            name: "Load Balancer 6",
-            protocol: "HTTP",
-            port: 3000,
-            rule: "Round robin",
-          },
-          {
-            id: "e",
-            name: "Load Balancer 4",
-            protocol: "HTTP",
-            port: 443,
-            rule: "Round robin",
-          },
-          {
-            id: "f",
-            name: "Load Balancer 5",
-            protocol: "HTTP",
-            port: 80,
-            rule: "DNS delegation",
-          },
-        ]}
+        bind:selectedRowIds
+        {headers}
+        {rows}
       >
-        <span slot="cell" let:cell>
-          {#if cell.key === "_action"}
-            <OverflowMenu flipped>
-              <OverflowMenuItem text="Manage credentials" />
-              <OverflowMenuItem
-                href="https://cloud.ibm.com/docs/api-gateway/"
-                text="API documentation"
-              />
-              <OverflowMenuItem danger text="Delete service" />
-            </OverflowMenu>
-          {:else}{cell.value}{/if}
-        </span>
-
         <Toolbar>
+          <ToolbarBatchActions
+            formatTotalSelected={(totalSelected) => {
+              return `总计选中: ${totalSelected} 项`
+            }}
+          >
+            <Button
+              icon={Delete16}
+              on:click={(e) => {
+                e.preventDefault()
+                console.log(selectedRowIds)
+              }}>Destory</Button
+            >
+          </ToolbarBatchActions>
           <ToolbarContent>
             <ToolbarSearch />
             <ToolbarMenu>
@@ -112,6 +112,20 @@
             <Button>Create balancer</Button>
           </ToolbarContent>
         </Toolbar>
+        {#if message.message !== ""}
+          <InlineLoading status={message.type} description={message.message} />
+        {/if}
+        <span slot="cell" let:cell>
+          {#if cell.key === "_action"}
+            <OverflowMenu flipped>
+              <OverflowMenuItem text="Edit" />
+              <OverflowMenuItem href="/users" text="Edit" />
+              <OverflowMenuItem danger text="Delete" />
+            </OverflowMenu>
+          {:else}
+            {cell.value}
+          {/if}
+        </span>
       </DataTable>
       <Pagination totalItems={102} pageSizes={[16, 36, 99]} pageSize={36} />
     </Column>

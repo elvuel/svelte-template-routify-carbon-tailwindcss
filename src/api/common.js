@@ -15,9 +15,12 @@ const axios = newAxios({
                 error_code,
                 error_message
             } = response.data
+            // return Promise.reject({
+            //     error_code,
+            //     error_message
+            // });
             return Promise.reject({
-                error_code,
-                error_message
+                message: `${error_code}:${error_message}`
             });
         }
         return response.data.data
