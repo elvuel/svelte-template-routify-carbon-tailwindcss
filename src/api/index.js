@@ -1,11 +1,16 @@
 import axios from './common.js'
+import qs from 'qs'
 
 export async function auth(data = {}) {
     return axios.post('/auth', data)
 }
 
-export async function users() {
-    return axios.get('/users')
+export async function users(data = {}) {
+    let path = "/users"
+    if (Object.keys(data).length > 0) {
+        path += `?${qs.stringify(data, { arrayFormat: 'repeat' })}`
+    }
+    return axios.get(path)
 }
 
 export async function createUser(data = {}) {

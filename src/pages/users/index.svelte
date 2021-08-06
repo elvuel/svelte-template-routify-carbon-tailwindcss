@@ -23,7 +23,11 @@
     useMutation,
     useQueryClient,
   } from "@sveltestack/svelte-query"
-  import { users as fetchUsers, deleteUser, deleteUsers } from "../../api/index"
+  import {
+    users as APIUsers,
+    deleteUser as APIDeleteUser,
+    deleteUsers as APIDeleteUsers,
+  } from "../../api/index"
   import { url } from "@roxi/routify"
   import { t } from "svelte-i18n"
 
@@ -36,7 +40,22 @@
 
   const queryClient = useQueryClient()
 
-  let queryResult = useQuery("users", fetchUsers, {
+  let pagination = {
+    totalItems: 0,
+    totalPages: 0,
+    size: 2,
+    page: 1,
+  }
+
+  let message = {
+    type: "active",
+    message: "",
+  }
+
+  let selectedRowIds = []
+  let rows = []
+
+  let queryResult = useQuery(["users", pagination.page], fetchUsers, {
     retry: (faileCount, error) => {
       if (faileCount > 3) {
         console.log(error)
@@ -47,13 +66,23 @@
     },
   })
 
-  let message = {
-    type: "active",
-    message: "",
+  function paginate() {
+    queryResult = useQuery(["users", pagination.page], fetchUsers, {
+      retry: (faileCount, error) => {
+        if (faileCount > 3) {
+          console.log(error)
+        }
+      },
+      retryDelay: (faileCount) => {
+        return Math.min(1000 * 2 ** faileCount, 30000)
+      },
+    })
   }
 
-  let selectedRowIds = []
-  let rows = []
+  function fetchUsers({ queryKey }) {
+    const [_key, page] = queryKey
+    return APIUsers({ page: page, size: pagination.size })
+  }
 
   function queryStatus() {
     switch ($queryResult.status) {
@@ -71,12 +100,16 @@
       case "success":
         message.type = "success"
         message.message = ""
-        rows = $queryResult.data
+        rows = $queryResult.data.items
+        pagination.totalItems = $queryResult.data.totalItems
+        pagination.totalPages = $queryResult.data.totalPages
+        pagination.page = $queryResult.data.page
+        pagination.size = $queryResult.data.size
         break
     }
   }
-  const deleteMutation = useMutation((id) => deleteUser(id))
-  const batchDeleteMutation = useMutation((ids) => deleteUsers(ids))
+  const deleteMutation = useMutation((id) => APIDeleteUser(id))
+  const batchDeleteMutation = useMutation((ids) => APIDeleteUsers(ids))
 
   function removeUser(id) {
     $deleteMutation.mutate(id, {
@@ -176,7 +209,20 @@
           {/if}
         </span>
       </DataTable>
-      <Pagination totalItems={102} pageSizes={[16, 36, 99]} pageSize={36} />
+      {#if pagination.totalItems > 0}
+        <Pagination
+          pageSizeInputDisabled
+          totalItems={pagination.totalItems}
+          pageSizes={[2, 4, 6, 8]}
+          pageSize={pagination.size}
+          on:update={(e) => {
+            const { pageSize, page } = e.detail
+            pagination.page = page
+            pagination.size = pageSize
+            paginate()
+          }}
+        />
+      {/if}
     </Column>
   </Row>
 </Grid>
