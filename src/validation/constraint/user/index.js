@@ -7,6 +7,14 @@ export default function user(translate) {
             intro: {
                 max: 30
             }
+        },
+        update: {
+            name: {
+                required: true
+            },
+            intro: {
+                max: 30
+            }
         }
     }
 }

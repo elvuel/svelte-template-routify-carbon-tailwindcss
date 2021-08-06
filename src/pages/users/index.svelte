@@ -116,11 +116,11 @@
         {#if message.message !== ""}
           <InlineLoading status={message.type} description={message.message} />
         {/if}
-        <span slot="cell" let:cell>
+        <span slot="cell" let:cell let:row>
           {#if cell.key === "_action"}
             <OverflowMenu flipped>
-              <OverflowMenuItem text="Edit" />
-              <OverflowMenuItem href="/users" text="Edit" />
+              <OverflowMenuItem href={$url(`./${row.id}`)} text="Show" />
+              <OverflowMenuItem href={$url(`./${row.id}/edit`)} text="Edit" />
               <OverflowMenuItem danger text="Delete" />
             </OverflowMenu>
           {:else}

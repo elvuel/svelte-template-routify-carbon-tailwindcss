@@ -13,7 +13,7 @@
 
   import { params } from "@roxi/routify"
   import { useQuery } from "@sveltestack/svelte-query"
-  import { getUser } from "../../api"
+  import { getUser } from "../../../api"
 
   let queryResult = useQuery(["users", $params.id], () => getUser($params.id), {
     retry: (faileCount, error) => {
@@ -63,7 +63,7 @@
       <Breadcrumb>
         <BreadcrumbItem href="/">Dashboard</BreadcrumbItem>
         <BreadcrumbItem href="/users">Users</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>New</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>{$params.id}</BreadcrumbItem>
       </Breadcrumb>
     </Column>
   </Row>
@@ -81,7 +81,7 @@
         <FormGroup>
           <TextInput
             placeholder="Intro"
-            labelText="intro"
+            labelText="Intro"
             readonly
             bind:value={user.intro}
           />

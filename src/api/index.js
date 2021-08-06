@@ -15,3 +15,7 @@ export async function createUser(data = {}) {
 export async function getUser(id) {
     return axios.get(`/users/${id}`)
 }
+
+export async function updateUser(id, data = {}) {
+    return axios.put(`/users/${id}`, data)
+}
