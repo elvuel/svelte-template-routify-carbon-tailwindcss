@@ -13,18 +13,22 @@
 
   import { params } from "@roxi/routify"
   import { useQuery } from "@sveltestack/svelte-query"
-  import { getUser } from "../../../api"
+  import api from "../../../api"
 
-  let queryResult = useQuery(["users", $params.id], () => getUser($params.id), {
-    retry: (faileCount, error) => {
-      if (faileCount > 3) {
-        console.log(error)
-      }
-    },
-    retryDelay: (faileCount) => {
-      return Math.min(1000 * 2 ** faileCount, 30000)
-    },
-  })
+  let queryResult = useQuery(
+    ["users", $params.id],
+    () => api.getUser($params.id),
+    {
+      retry: (faileCount, error) => {
+        if (faileCount > 3) {
+          console.log(error)
+        }
+      },
+      retryDelay: (faileCount) => {
+        return Math.min(1000 * 2 ** faileCount, 30000)
+      },
+    }
+  )
 
   let message = {
     type: "active",

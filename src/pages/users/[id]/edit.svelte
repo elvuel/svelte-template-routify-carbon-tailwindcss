@@ -19,14 +19,14 @@
     useQueryClient,
   } from "@sveltestack/svelte-query"
   import { newValidator, getValidation } from "../../../validation/index"
-  import { getUser, updateUser } from "../../../api"
+  import api from "../../../api"
   import { t } from "svelte-i18n"
 
   const queryClient = useQueryClient()
 
   const queryResult = useQuery(
     ["users", $params.id],
-    () => getUser($params.id),
+    () => api.getUser($params.id),
     {
       retry: (faileCount, error) => {
         if (faileCount > 3) {
@@ -39,7 +39,7 @@
     }
   )
 
-  const mutation = useMutation((data) => updateUser(data.id, data.data))
+  const mutation = useMutation((data) => api.updateUser(data.id, data.data))
 
   let message = {
     type: "active",

@@ -23,11 +23,7 @@
     useMutation,
     useQueryClient,
   } from "@sveltestack/svelte-query"
-  import {
-    users as APIUsers,
-    deleteUser as APIDeleteUser,
-    deleteUsers as APIDeleteUsers,
-  } from "../../api/index"
+  import api from "../../api/index"
   import { url } from "@roxi/routify"
   import { t } from "svelte-i18n"
 
@@ -81,7 +77,7 @@
 
   function fetchUsers({ queryKey }) {
     const [_key, page] = queryKey
-    return APIUsers({ page: page, size: pagination.size })
+    return api.users({ page: page, size: pagination.size })
   }
 
   function queryStatus() {
@@ -108,8 +104,8 @@
         break
     }
   }
-  const deleteMutation = useMutation((id) => APIDeleteUser(id))
-  const batchDeleteMutation = useMutation((ids) => APIDeleteUsers(ids))
+  const deleteMutation = useMutation((id) => api.deleteUser(id))
+  const batchDeleteMutation = useMutation((ids) => api.deleteUsers(ids))
 
   function removeUser(id) {
     $deleteMutation.mutate(id, {

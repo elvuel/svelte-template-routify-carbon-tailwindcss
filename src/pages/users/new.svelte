@@ -13,13 +13,13 @@
   } from "carbon-components-svelte"
   import { useMutation, useQueryClient } from "@sveltestack/svelte-query"
   import { t } from "svelte-i18n"
-  import { createUser } from "../../api"
+  import api from "../../api"
   import { newValidator, getValidation } from "../../validation/index"
   import { goto } from "@roxi/routify"
 
   const queryClient = useQueryClient()
 
-  const mutation = useMutation((data) => createUser(data), {
+  const mutation = useMutation((data) => api.createUser(data), {
     // onMutate: async (variables) => {
     //   // A mutation is about to happen!
     // },

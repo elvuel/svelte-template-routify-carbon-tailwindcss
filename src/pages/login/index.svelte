@@ -1,6 +1,6 @@
 <script>
   import { useMutation } from "@sveltestack/svelte-query"
-  import { auth } from "../../api/index"
+  import api from "../../api/index"
   import { t } from "svelte-i18n"
 
   import PasswordInput from "carbon-components-svelte/src/TextInput/PasswordInput.svelte"
@@ -13,7 +13,7 @@
   metatags.title = "Login"
   metatags.description = "Login from"
 
-  const login = useMutation((creds) => auth(creds), {
+  const login = useMutation((creds) => api.auth(creds), {
     // onMutate: async (variables) => {
     //   // A mutation is about to happen!
     // },
