@@ -18,8 +18,12 @@
   } from "carbon-components-svelte"
   import Delete16 from "carbon-icons-svelte/lib/Delete16"
 
-  import { useQuery } from "@sveltestack/svelte-query"
-  import { users as fetchUsers } from "../../api/index"
+  import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+  } from "@sveltestack/svelte-query"
+  import { users as fetchUsers, deleteUser, deleteUsers } from "../../api/index"
   import { url } from "@roxi/routify"
   import { t } from "svelte-i18n"
 
@@ -29,6 +33,8 @@
     { key: "intro", value: "Intro" },
     { key: "_action", value: "Action" },
   ]
+
+  const queryClient = useQueryClient()
 
   let queryResult = useQuery("users", fetchUsers, {
     retry: (faileCount, error) => {
@@ -69,6 +75,41 @@
         break
     }
   }
+  const deleteMutation = useMutation((id) => deleteUser(id))
+  const batchDeleteMutation = useMutation((ids) => deleteUsers(ids))
+
+  function removeUser(id) {
+    $deleteMutation.mutate(id, {
+      onSuccess: (data, variables, context) => {
+        // I will fire second!
+        queryClient.invalidateQueries("users")
+      },
+      onError: (error, variables, context) => {
+        // I will fire second!
+        setTimeout(() => {
+          $deleteMutation.reset()
+        }, 5000)
+      },
+      retry: 0,
+    })
+  }
+
+  function removeUsers(ids) {
+    $batchDeleteMutation.mutate(ids, {
+      onSuccess: (data, variables, context) => {
+        // I will fire second!
+        queryClient.invalidateQueries("users")
+        selectedRowIds = []
+      },
+      onError: (error, variables, context) => {
+        // I will fire second!
+        setTimeout(() => {
+          $batchDeleteMutation.reset()
+        }, 5000)
+      },
+      retry: 0,
+    })
+  }
 
   $: $queryResult.status, queryStatus()
 </script>
@@ -95,7 +136,7 @@
               icon={Delete16}
               on:click={(e) => {
                 e.preventDefault()
-                console.log(selectedRowIds)
+                removeUsers(selectedRowIds)
               }}>Destory</Button
             >
           </ToolbarBatchActions>
@@ -121,7 +162,14 @@
             <OverflowMenu flipped>
               <OverflowMenuItem href={$url(`./${row.id}`)} text="Show" />
               <OverflowMenuItem href={$url(`./${row.id}/edit`)} text="Edit" />
-              <OverflowMenuItem danger text="Delete" />
+              <OverflowMenuItem
+                danger
+                text="Delete"
+                on:click={(e) => {
+                  e.preventDefault()
+                  removeUser(row.id)
+                }}
+              />
             </OverflowMenu>
           {:else}
             {cell.value}
