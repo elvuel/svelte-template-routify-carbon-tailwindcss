@@ -51,7 +51,7 @@
   let selectedRowIds = []
   let rows = []
 
-  let queryResult = useQuery(["users", pagination.page], fetchUsers, {
+  let queryResult = useQuery(["users", { page: pagination.page }], fetchUsers, {
     retry: (faileCount, error) => {
       if (faileCount > 3) {
         console.log(error)
@@ -63,7 +63,7 @@
   })
 
   function paginate() {
-    queryResult = useQuery(["users", pagination.page], fetchUsers, {
+    queryResult = useQuery(["users", { page: pagination.page }], fetchUsers, {
       retry: (faileCount, error) => {
         if (faileCount > 3) {
           console.log(error)
@@ -77,7 +77,7 @@
 
   function fetchUsers({ queryKey }) {
     const [_key, page] = queryKey
-    return api.users({ page: page, size: pagination.size })
+    return api.users({ page: page.page, size: pagination.size })
   }
 
   function queryStatus() {
@@ -111,7 +111,7 @@
     $deleteMutation.mutate(id, {
       onSuccess: (data, variables, context) => {
         // I will fire second!
-        queryClient.invalidateQueries("users")
+        queryClient.invalidateQueries(["users", { page: pagination.page }])
       },
       onError: (error, variables, context) => {
         // I will fire second!
@@ -127,7 +127,7 @@
     $batchDeleteMutation.mutate(ids, {
       onSuccess: (data, variables, context) => {
         // I will fire second!
-        queryClient.invalidateQueries("users")
+        queryClient.invalidateQueries(["users", { page: pagination.page }])
         selectedRowIds = []
       },
       onError: (error, variables, context) => {

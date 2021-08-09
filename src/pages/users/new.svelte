@@ -48,7 +48,7 @@
       },
       onSuccess: (data, variables, context) => {
         // I will fire second!
-        queryClient.invalidateQueries("users")
+        queryClient.invalidateQueries(["users", { page: 1 }])
         resetUiControls()
         message.type = "success"
         message.message = "Succeed"

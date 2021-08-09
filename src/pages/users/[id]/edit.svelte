@@ -78,7 +78,7 @@
       },
       onSuccess: (data, variables, context) => {
         // I will fire second!
-        queryClient.invalidateQueries("users")
+        queryClient.invalidateQueries(["users", $params.id])
         resetUiControls()
         message.type = "succeed"
         message.message = "Updated"
