@@ -1,6 +1,5 @@
 <script>
   import { Modal } from "carbon-components-svelte"
-  import { createEventDispatcher } from "svelte"
 
   import Show from "./_show.svelte"
   import Edit from "./_edit.svelte"
@@ -20,8 +19,6 @@
     new: New,
   }
 
-  const dispatch = createEventDispatcher()
-
   function closeModal() {
     open = false
   }
@@ -36,7 +33,9 @@
   bind:modalHeading
   bind:primaryButtonText
   bind:secondaryButtonText
-  on:click:button--secondary
+  on:click:button--secondary={() => {
+    closeModal()
+  }}
   on:open
   on:close
   on:submit={(e) => {
@@ -49,5 +48,5 @@
     )
   }}
 >
-  <svelte:component this={components[component]} {data} />
+  <svelte:component this={components[component]} bind:data />
 </Modal>

@@ -49,7 +49,7 @@
   let pagination = {
     totalItems: 0,
     totalPages: 0,
-    size: 20,
+    size: 3,
     page: 1,
   }
 
@@ -61,19 +61,10 @@
   let selectedRowIds = []
   let rows = []
 
-  let queryResult = useQuery(["dummies", pagination.page], fetchDummies, {
-    retry: (faileCount, error) => {
-      if (faileCount > 3) {
-        console.log(error)
-      }
-    },
-    retryDelay: (faileCount) => {
-      return Math.min(1000 * 2 ** faileCount, 30000)
-    },
-  })
-
-  function paginate() {
-    queryResult = useQuery(["dummies", pagination.page], fetchDummies, {
+  let queryResult = useQuery(
+    ["dummies", { page: pagination.page }],
+    fetchDummies,
+    {
       retry: (faileCount, error) => {
         if (faileCount > 3) {
           console.log(error)
@@ -82,12 +73,29 @@
       retryDelay: (faileCount) => {
         return Math.min(1000 * 2 ** faileCount, 30000)
       },
-    })
+    }
+  )
+
+  function paginate() {
+    queryResult = useQuery(
+      ["dummies", { page: pagination.page }],
+      fetchDummies,
+      {
+        retry: (faileCount, error) => {
+          if (faileCount > 3) {
+            console.log(error)
+          }
+        },
+        retryDelay: (faileCount) => {
+          return Math.min(1000 * 2 ** faileCount, 30000)
+        },
+      }
+    )
   }
 
   function fetchDummies({ queryKey }) {
     const [_key, page] = queryKey
-    return api.dummies({ page: page, size: pagination.size })
+    return api.dummies({ page: page.page, size: pagination.size })
   }
 
   function queryStatus() {
@@ -121,7 +129,7 @@
     $deleteMutation.mutate(id, {
       onSuccess: (data, variables, context) => {
         // I will fire second!
-        queryClient.invalidateQueries("dummies")
+        queryClient.invalidateQueries(["dummies", { page: pagination.page }])
       },
       onError: (error, variables, context) => {
         // I will fire second!
@@ -137,7 +145,7 @@
     $batchDeleteMutation.mutate(ids, {
       onSuccess: (data, variables, context) => {
         // I will fire second!
-        queryClient.invalidateQueries("dummies")
+        queryClient.invalidateQueries(["dummies", { page: pagination.page }])
         selectedRowIds = []
       },
       onError: (error, variables, context) => {
@@ -193,7 +201,7 @@
             <Button
               on:click={(e) => {
                 e.preventDefault()
-                modalData.modalHeading = "New User"
+                modalData.modalHeading = "New Dummy"
                 modalData.component = "new"
                 modalData.open = true
               }}>New</Button
@@ -206,8 +214,26 @@
         <span slot="cell" let:cell let:row>
           {#if cell.key === "_action"}
             <OverflowMenu flipped>
-              <OverflowMenuItem href={$url(`./${row.id}`)} text="Show" />
-              <OverflowMenuItem href={$url(`./${row.id}/edit`)} text="Edit" />
+              <OverflowMenuItem
+                text="Show"
+                on:click={(e) => {
+                  e.preventDefault()
+                  modalData.modalHeading = "Show Dummy"
+                  modalData.component = "show"
+                  modalData.open = true
+                  modalData.data = { id: row.id }
+                }}
+              />
+              <OverflowMenuItem
+                text="Edit"
+                on:click={(e) => {
+                  e.preventDefault()
+                  modalData.modalHeading = "Edit Dummy"
+                  modalData.component = "edit"
+                  modalData.open = true
+                  modalData.data = { id: row.id, page: pagination.page }
+                }}
+              />
               <OverflowMenuItem
                 danger
                 text="Delete"
@@ -242,7 +268,7 @@
           bind:modalHeading={modalData.modalHeading}
           bind:secondaryButtonText={modalData.secondaryButtonText}
           bind:component={modalData.component}
-          data={modalData.data}
+          bind:data={modalData.data}
         />
       {/if}
     </Column>

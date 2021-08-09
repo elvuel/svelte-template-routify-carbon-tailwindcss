@@ -48,7 +48,7 @@
         resetUiControls()
         message.type = "success"
         message.message = "Succeed"
-        queryClient.invalidateQueries(["dummies", 1])
+        queryClient.invalidateQueries(["dummies", { page: 1 }])
         e.detail.close()
       },
       onError: (error, variables, context) => {
