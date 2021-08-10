@@ -21,12 +21,12 @@
     Grid,
     Row,
     Column,
-  } from "carbon-components-svelte";
-  import Fade16 from "carbon-icons-svelte/lib/Fade16";
-  import SettingsAdjust20 from "carbon-icons-svelte/lib/SettingsAdjust20";
+  } from "carbon-components-svelte"
+  import Fade16 from "carbon-icons-svelte/lib/Fade16"
+  import SettingsAdjust20 from "carbon-icons-svelte/lib/SettingsAdjust20"
 
-  let isSideNavOpen = true;
-  let isOpen = false;
+  let isSideNavOpen = true
+  let isOpen = false
 </script>
 
 <Header
@@ -68,8 +68,8 @@
 
   <SideNav bind:isOpen={isSideNavOpen} rail>
     <SideNavItems>
-      <SideNavLink icon={Fade16} text="Link 1" href="/" isSelected />
-      <SideNavLink icon={Fade16} text="Link 2" href="/" />
+      <SideNavLink icon={Fade16} text="users" href="/users" isSelected />
+      <SideNavLink icon={Fade16} text="dummies" href="/dummies" />
       <SideNavLink icon={Fade16} text="Link 3" href="/" />
       <SideNavMenu icon={Fade16} text="Menu">
         <SideNavMenuItem href="/" text="Link 1" />

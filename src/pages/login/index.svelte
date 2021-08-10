@@ -2,13 +2,15 @@
   import { useMutation } from "@sveltestack/svelte-query"
   import api from "../../api/index"
   import { t } from "svelte-i18n"
-
+  import Cookies from "../../utils/js-cookie"
   import PasswordInput from "carbon-components-svelte/src/TextInput/PasswordInput.svelte"
   import TextInput from "carbon-components-svelte/src/TextInput/TextInput.svelte"
   import Button from "carbon-components-svelte/src/Button/Button.svelte"
-  import { metatags } from "@roxi/routify"
+  import { goto, metatags } from "@roxi/routify"
   import Theme from "carbon-components-svelte/src/Theme/Theme.svelte"
   import { newValidator, getValidation } from "../../validation/index"
+  import axios from "../../api/common"
+  import { setAxiosInstanceRequestInterceptor } from "../../utils/axios"
 
   metatags.title = "Login"
   metatags.description = "Login from"
@@ -36,6 +38,14 @@
       onSuccess: (data, variables, context) => {
         // I will fire second!
         resetUiControls()
+        Cookies.set("token", data.token, {
+          expires: new Date(data.expired_at * 1000),
+        })
+        setAxiosInstanceRequestInterceptor(axios, async (config) => {
+          config.headers.authorization = `Bearer ${data.token}`
+          return config
+        })
+        $goto("/")
       },
       onError: (error, variables, context) => {
         // I will fire second!
@@ -169,8 +179,8 @@
         <p>Adding todo...</p>
       {:else if $login.isError}
         <div>An error occurred: {JSON.stringify($login.error)}</div>
-      {:else if $login.isSuccess}
-        {$login.data}
+        <!-- {:else if $login.isSuccess}
+        {$login.data} -->
       {/if}
       <Button
         kind="primary"

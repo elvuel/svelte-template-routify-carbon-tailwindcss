@@ -1,21 +1,37 @@
 <script>
-  import { Router } from "@roxi/routify";
-  import { routes } from "../.routify/routes";
-  import { QueryClient, QueryClientProvider } from "@sveltestack/svelte-query";
-  import { t, init, getLocaleFromNavigator } from "svelte-i18n";
-  import { loadValidation } from "./validation/index";
-  import { initLoad } from "./locales";
+  import { goto, Router } from "@roxi/routify"
+  import { routes } from "../.routify/routes"
+  import { QueryClient, QueryClientProvider } from "@sveltestack/svelte-query"
+  import { t, init, getLocaleFromNavigator } from "svelte-i18n"
+  import { loadValidation } from "./validation/index"
+  import { initLoad } from "./locales"
+  import qs from "qs"
 
-  initLoad();
+  initLoad()
 
   init({
     fallbackLocale: "zh-CN",
     initialLocale: getLocaleFromNavigator(),
-  });
+  })
 
-  loadValidation($t);
+  loadValidation($t)
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        onError: (error) => {
+          // console.log(error.config, error.response, error.request)
+          // TODO add reason and redirect_uri
+          if (error.response.status === 401) {
+            const reason = qs.stringify({
+              reason: error.response.data.error_message,
+            })
+            window.location.href = `/login?${reason}`
+          }
+        },
+      },
+    },
+  })
 </script>
 
 <!-- <svelte:head>
