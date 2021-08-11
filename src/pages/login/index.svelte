@@ -2,7 +2,7 @@
   import { useMutation } from "@sveltestack/svelte-query"
   import api from "../../api/index"
   import { t } from "svelte-i18n"
-  import Cookies from "../../utils/js-cookie"
+  import Cookies from "js-cookie"
   import PasswordInput from "carbon-components-svelte/src/TextInput/PasswordInput.svelte"
   import TextInput from "carbon-components-svelte/src/TextInput/TextInput.svelte"
   import Button from "carbon-components-svelte/src/Button/Button.svelte"

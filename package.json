@@ -65,6 +65,7 @@
   "dependencies": {
     "async-validator": "^3.5.2",
     "axios": "^0.21.1",
+    "js-cookie": "^3.0.0",
     "sveltestrap": "^5.4.0"
   }
 }
