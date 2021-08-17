@@ -8,6 +8,7 @@
     Form,
     FormGroup,
     TextInput,
+    InlineLoading,
     Button,
   } from "carbon-components-svelte"
 
@@ -19,6 +20,9 @@
     ["users", $params.id],
     () => api.getUser($params.id),
     {
+      onError: (error) => {
+        console.log(error)
+      },
       retry: (faileCount, error) => {
         if (faileCount > 3) {
           console.log(error)
@@ -72,6 +76,9 @@
     </Column>
   </Row>
   <Row>
+    {#if message.message !== ""}
+      <InlineLoading status={message.type} description={message.message} />
+    {/if}
     <Column>
       <Form>
         <FormGroup>

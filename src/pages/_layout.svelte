@@ -24,6 +24,7 @@
   } from "carbon-components-svelte"
   import Fade16 from "carbon-icons-svelte/lib/Fade16"
   import SettingsAdjust20 from "carbon-icons-svelte/lib/SettingsAdjust20"
+  import CanDecorator from "../decorators/Can.svelte"
 
   let isSideNavOpen = true
   let isOpen = false
@@ -71,8 +72,8 @@
       <SideNavLink icon={Fade16} text="users" href="/users" isSelected />
       <SideNavLink icon={Fade16} text="dummies" href="/dummies" />
       <SideNavLink icon={Fade16} text="Link 3" href="/" />
-      <SideNavMenu icon={Fade16} text="Menu">
-        <SideNavMenuItem href="/" text="Link 1" />
+      <SideNavMenu icon={Fade16} text="权限管理">
+        <SideNavMenuItem href="/" text="菜单管理" />
         <SideNavMenuItem href="/" text="Link 2" />
         <SideNavMenuItem href="/" text="Link 3" />
       </SideNavMenu>
@@ -83,5 +84,5 @@
 </Header>
 
 <Content>
-  <slot />
+  <slot decorator={CanDecorator} />
 </Content>
