@@ -1,6 +1,6 @@
 <script>
   import { useMutation } from "@sveltestack/svelte-query"
-  import api from "../../api/index"
+  import api from "@/api/index"
   import { t } from "svelte-i18n"
   import Cookies from "js-cookie"
   import PasswordInput from "carbon-components-svelte/src/TextInput/PasswordInput.svelte"
@@ -8,9 +8,9 @@
   import Button from "carbon-components-svelte/src/Button/Button.svelte"
   import { goto, metatags } from "@roxi/routify"
   import Theme from "carbon-components-svelte/src/Theme/Theme.svelte"
-  import { newValidator, getValidation } from "../../validation/index"
-  import axios from "../../api/common"
-  import { setAxiosInstanceRequestInterceptor } from "../../utils/axios"
+  import { newValidator, getValidation } from "@/validation/index"
+  import axios from "@/api/common"
+  import { setAxiosInstanceRequestInterceptor } from "@/utils/axios"
 
   metatags.title = "Login"
   metatags.description = "Login from"

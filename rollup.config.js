@@ -24,6 +24,11 @@ import {
     injectManifest
 } from 'rollup-plugin-workbox'
 
+import alias from '@rollup/plugin-alias';
+import path from 'path'
+
+const projectRootDir = path.resolve(__dirname);
+
 
 const {
     distDir
@@ -79,6 +84,12 @@ export default {
         chunkFileNames: `[name]${production && '-[hash]' || ''}.js`
     },
     plugins: [
+        alias({
+            entries: [{
+                find: '@',
+                replacement: path.resolve(projectRootDir, 'src')
+            }]
+        }),
         svelte({
             emitCss: false,
             hot: isNollup,
