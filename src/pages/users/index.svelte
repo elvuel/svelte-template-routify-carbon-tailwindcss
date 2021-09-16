@@ -165,7 +165,10 @@
               on:click={(e) => {
                 e.preventDefault()
                 removeUsers(selectedRowIds)
-              }}>Destory</Button
+              }}>{$t("page.general.action.delete")}</Button
+            >
+            <svelte:fragment slot="cancel"
+              >{$t("page.general.action.cancel")}</svelte:fragment
             >
           </ToolbarBatchActions>
           <ToolbarContent>

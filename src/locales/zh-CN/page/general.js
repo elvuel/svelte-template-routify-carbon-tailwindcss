@@ -8,7 +8,8 @@ export const general = {
         show: '查看',
         update: '更新',
         edit: '编辑',
-        delete: '删除'
+        delete: '删除',
+        cancel: '取消',
     },
     hide: '隐藏',
     ok: '确定',
