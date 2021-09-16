@@ -1,4 +1,6 @@
 export const user = {
-    username: '用户名',
-    password: '密码'
+    '$name': '用户',
+    id: '编号',
+    name: '名称',
+    intro: '介绍',
 }

@@ -1,4 +1,5 @@
 export const user = {
-    username: 'Username',
-    password: 'Password',
+    id: 'id',
+    name: 'name',
+    intro: 'intro',
 }

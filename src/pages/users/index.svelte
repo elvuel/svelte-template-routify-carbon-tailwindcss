@@ -28,10 +28,10 @@
   import { t } from "svelte-i18n"
 
   const headers = [
-    { key: "id", value: "ID" },
-    { key: "name", value: "Name" },
-    { key: "intro", value: "Intro" },
-    { key: "_action", value: "Action" },
+    { key: "id", value: $t("model.user.id") },
+    { key: "name", value: $t("model.user.name") },
+    { key: "intro", value: $t("model.user.intro") },
+    { key: "_action", value: $t("page.general.action.default") },
   ]
 
   const queryClient = useQueryClient()
@@ -149,8 +149,7 @@
       <DataTable
         batchSelection
         zebra
-        title="Load balancers"
-        description="Your organization's active load balancers."
+        title={$t("model.user.$name") + $t("page.general.list")}
         bind:selectedRowIds
         {headers}
         {rows}
@@ -180,7 +179,8 @@
               </ToolbarMenuItem>
               <ToolbarMenuItem danger>Stop all</ToolbarMenuItem>
             </ToolbarMenu>
-            <Button href={$url("./new")}>New</Button>
+            <Button href={$url("./new")}>{$t("page.general.action.new")}</Button
+            >
           </ToolbarContent>
         </Toolbar>
         {#if message.message !== ""}
@@ -189,11 +189,17 @@
         <span slot="cell" let:cell let:row>
           {#if cell.key === "_action"}
             <OverflowMenu flipped>
-              <OverflowMenuItem href={$url(`./${row.id}`)} text="Show" />
-              <OverflowMenuItem href={$url(`./${row.id}/edit`)} text="Edit" />
+              <OverflowMenuItem
+                href={$url(`./${row.id}`)}
+                text={$t("page.general.action.show")}
+              />
+              <OverflowMenuItem
+                href={$url(`./${row.id}/edit`)}
+                text={$t("page.general.action.edit")}
+              />
               <OverflowMenuItem
                 danger
-                text="Delete"
+                text={$t("page.general.action.delete")}
                 on:click={(e) => {
                   e.preventDefault()
                   removeUser(row.id)
