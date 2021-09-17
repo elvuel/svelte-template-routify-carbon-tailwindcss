@@ -75,7 +75,11 @@
       <SideNavMenu icon={Fade16} text="权限管理">
         <SideNavMenuItem href="/" text="菜单管理" />
         <SideNavMenuItem href="/" text="Link 2" />
-        <SideNavMenuItem href="/" text="Link 3" />
+        <SideNavMenuItem href="/"
+          ><div class="flex items-center">
+            <Fade16 /> Some Text
+          </div></SideNavMenuItem
+        >
       </SideNavMenu>
       <SideNavDivider />
       <SideNavLink icon={Fade16} text="Link 4" href="/" />
