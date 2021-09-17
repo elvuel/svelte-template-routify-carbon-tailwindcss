@@ -10,9 +10,13 @@ import {
 import {
     pagination
 } from "./pagination"
+import {
+    dashboard
+} from './dashboard'
 export const page = {
     general,
     user,
     datatable,
-    pagination
+    pagination,
+    dashboard
 }

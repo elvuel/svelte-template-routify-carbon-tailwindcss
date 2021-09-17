@@ -9,8 +9,6 @@
     ToolbarBatchActions,
     ToolbarContent,
     ToolbarSearch,
-    ToolbarMenu,
-    ToolbarMenuItem,
     Pagination,
     OverflowMenu,
     OverflowMenuItem,
@@ -26,7 +24,7 @@
   import api from "../../api/index"
   import { url } from "@roxi/routify"
   import { t } from "svelte-i18n"
-  import { currentLocation } from "@roxi/routify/runtime/utils"
+  import Add16 from "carbon-icons-svelte/lib/Add16"
 
   const headers = [
     { key: "id", value: $t("model.user.id") },
@@ -176,7 +174,8 @@
           </ToolbarBatchActions>
           <ToolbarContent>
             <ToolbarSearch />
-            <Button href={$url("./new")}>{$t("page.general.action.new")}</Button
+            <Button icon={Add16} href={$url("./new")}
+              >{$t("page.general.action.new")}</Button
             >
           </ToolbarContent>
         </Toolbar>

@@ -16,6 +16,7 @@
   import api from "../../api"
   import { newValidator, getValidation } from "../../validation/index"
   import { goto } from "@roxi/routify"
+  import Add16 from "carbon-icons-svelte/lib/Add16"
 
   const queryClient = useQueryClient()
 
@@ -97,9 +98,11 @@
   <Row
     ><Column>
       <Breadcrumb>
-        <BreadcrumbItem href="/">Dashboard</BreadcrumbItem>
-        <BreadcrumbItem href="/users">Users</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>New</BreadcrumbItem>
+        <BreadcrumbItem href="/">{$t("page.dashboard.default")}</BreadcrumbItem>
+        <BreadcrumbItem href="/users">{$t("page.user.list")}</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage
+          >{$t("page.general.action.new")}</BreadcrumbItem
+        >
       </Breadcrumb>
     </Column>
   </Row>
@@ -108,8 +111,8 @@
       <Form>
         <FormGroup>
           <TextInput
-            placeholder="Name"
-            labelText="Name"
+            placeholder={$t("model.user.name")}
+            labelText={$t("model.user.name")}
             bind:value={uiCtrl.name.value}
             invalid={uiCtrl.name.invalid}
             invalidText={uiCtrl.name.invalidText}
@@ -117,8 +120,8 @@
         </FormGroup>
         <FormGroup>
           <TextInput
-            placeholder="Intro"
-            labelText="Intro"
+            placeholder={$t("model.user.intro")}
+            labelText={$t("model.user.intro")}
             bind:value={uiCtrl.intro.value}
             invalid={uiCtrl.intro.invalid}
             invalidText={uiCtrl.intro.invalidText}
@@ -126,6 +129,7 @@
         </FormGroup>
         <Button
           type="button"
+          icon={Add16}
           on:click={(e) => {
             e.preventDefault()
             const payload = {
@@ -148,7 +152,7 @@
                 })
               })
           }}
-          >Create
+          >{$t("page.general.action.create")}
         </Button>
         {#if message.message !== ""}
           <InlineLoading status={message.type} description={message.message} />

@@ -21,6 +21,7 @@
   import { newValidator, getValidation } from "../../../validation/index"
   import api from "../../../api"
   import { t } from "svelte-i18n"
+  import UpdateNow16 from "carbon-icons-svelte/lib/UpdateNow16"
 
   const queryClient = useQueryClient()
 
@@ -128,9 +129,11 @@
   <Row
     ><Column>
       <Breadcrumb>
-        <BreadcrumbItem href="/">Dashboard</BreadcrumbItem>
-        <BreadcrumbItem href="/users">Users</BreadcrumbItem>
-        <BreadcrumbItem isCurrentPage>Edit - {$params.id}</BreadcrumbItem>
+        <BreadcrumbItem href="/">{$t("page.dashboard.default")}</BreadcrumbItem>
+        <BreadcrumbItem href="/users">{$t("page.user.list")}</BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage
+          >{$t("page.general.action.edit")} - {$params.id}</BreadcrumbItem
+        >
       </Breadcrumb>
     </Column>
   </Row>
@@ -139,20 +142,21 @@
       <Form>
         <FormGroup>
           <TextInput
-            placeholder="Name"
-            labelText="Name"
+            placeholder={$t("model.user.name")}
+            labelText={$t("model.user.name")}
             bind:value={uiCtrl.name.value}
           />
         </FormGroup>
         <FormGroup>
           <TextInput
-            placeholder="Intro"
-            labelText="Intro"
+            placeholder={$t("model.user.intro")}
+            labelText={$t("model.user.intro")}
             bind:value={uiCtrl.intro.value}
           />
         </FormGroup>
         <Button
           type="button"
+          icon={UpdateNow16}
           on:click={(e) => {
             e.preventDefault()
             const payload = {
@@ -174,7 +178,7 @@
                   uiCtrl[element.field].invalidText = element.message
                 })
               })
-          }}>Update</Button
+          }}>{$t("page.general.action.update")}</Button
         >
         {#if message.message !== ""}
           <InlineLoading status={message.type} description={message.message} />
