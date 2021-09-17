@@ -26,6 +26,7 @@
   import api from "../../api/index"
   import { url } from "@roxi/routify"
   import { t } from "svelte-i18n"
+  import { currentLocation } from "@roxi/routify/runtime/utils"
 
   const headers = [
     { key: "id", value: $t("model.user.id") },
@@ -149,7 +150,7 @@
       <DataTable
         batchSelection
         zebra
-        title={$t("model.user.$name") + $t("page.general.list")}
+        title={$t("page.user.list")}
         bind:selectedRowIds
         {headers}
         {rows}
@@ -157,7 +158,9 @@
         <Toolbar>
           <ToolbarBatchActions
             formatTotalSelected={(totalSelected) => {
-              return `总计选中: ${totalSelected} 项`
+              return $t("page.datatable.formatTotalSelected", {
+                values: { selected: totalSelected },
+              })
             }}
           >
             <Button
@@ -173,15 +176,6 @@
           </ToolbarBatchActions>
           <ToolbarContent>
             <ToolbarSearch />
-            <ToolbarMenu>
-              <ToolbarMenuItem primaryFocus>Restart all</ToolbarMenuItem>
-              <ToolbarMenuItem
-                href="https://cloud.ibm.com/docs/loadbalancer-service"
-              >
-                API documentation
-              </ToolbarMenuItem>
-              <ToolbarMenuItem danger>Stop all</ToolbarMenuItem>
-            </ToolbarMenu>
             <Button href={$url("./new")}>{$t("page.general.action.new")}</Button
             >
           </ToolbarContent>
@@ -220,6 +214,18 @@
           totalItems={pagination.totalItems}
           pageSizes={[2, 4, 6, 8]}
           pageSize={pagination.size}
+          itemRangeText={(min, max, total) => {
+            return $t("page.pagination.itemRangeText", {
+              values: { min, max, total },
+            })
+          }}
+          pageRangeText={(current, total) => {
+            return $t("page.pagination.pageRangeText", {
+              values: { total },
+            })
+          }}
+          forwardText={$t("page.pagination.forwardText")}
+          backwardText={$t("page.pagination.backwardText")}
           on:update={(e) => {
             const { pageSize, page } = e.detail
             pagination.page = page
